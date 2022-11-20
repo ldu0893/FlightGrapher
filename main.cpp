@@ -7,6 +7,7 @@
 #include <map>
 #include <algorithm>
 #include <bits/stdc++.h>
+#include <cmath>
 using namespace std;
 int isNumber(string s)
 {
