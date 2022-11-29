@@ -16,13 +16,13 @@ We will parse the input data from a text file, with each line representing new d
 We will store the data using directed graphs and arrays (vectors). The graph will have each node as an airport, and each node will store connections to other nodes through the routes information. It is a directed graph so we can only go in one direction. Given n airports and m routes, we estimate to store about O(n+m) or more specifically O(n+2m) (each route may produce two data points: airport to airport and weights information). 
 
 ## Algorithm 
-For the algorithms, we plan to use BFS to implement Dijkstra’s and A*, and also store runtime information just so we can see the most efficient algorithm.\
+For the algorithms, we plan to use BFS to implement Dijkstra’s and pagerank, and also store runtime information just so we can see the most efficient algorithm.
 For each algorithm, expected inputs are starting airport and ending airport. No other inputs are needed, everything else is stored in the graph.
 For the output, we expect to print the path found as well as the distance that was found. If extra time allows we may try to show the path visually on a map of the world, so that users can visually see the output path.
 
 Big O storage for all algorithms should be O(n+m), since everything will be stored in the graph. We may use queue and stack extra storage, but that doesn’t impact the Big O size.
 Estimate of the Big O for time will be O(n+mlogn), assuming that n is airports and m is routes for Dijkstra’s algorithm.
-Big O time for A* should be O(E) where E is number of edges. This is because we may have to traverse all edges in worse case.
+Big O time for pagerank should be O(n+m) where n is airports and m is routes. This is because we should need to visit each node and edge at least once.
 
 ## Timeline
 Data acquisition- Week 1
