@@ -33,8 +33,6 @@ void PageRank::makeA(int num, double damping) {
 }
 
  
-//effect: print the adj matrix. column and row are labeled
-
 void PageRank::print_adjmatrix(){
     cout<<"adj matrix"<<endl;
     cout<<"      ";

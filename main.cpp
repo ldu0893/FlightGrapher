@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "BFS.h"
 #include <iostream>
 
 
@@ -64,16 +65,24 @@ long double distance(long double lat1, long double long1,
 map <int, vector<pair<int, long double> > > routes;
 std::map<int, std::pair<long double, long double>> airports;
 int main() {
-    std::cout << "main" << std::endl;
-    Parser p;
-    p.runParse();
-    routes = p.getRoutes();
-    airports = p.getAirports();
-    std::cout << "end" << std::endl;
-    //for (std::pair<double, double> q : airports) {
-      //std::cout << q.first << " " << q.second << std::endl;
-    //}
-    std::cout << airports[7].first << " " << airports[7].second << std::endl;
-    std::cout << routes[1][0].first << " " << routes[1][0].second << std::endl;
-    std::cout << routes[2965][0].first << " " << routes[2965][0].second << std::endl;
+  std::cout << "main" << std::endl;
+  Parser p;
+  p.runParse();
+  routes = p.getRoutes();
+  airports = p.getAirports();
+  std::cout << "end" << std::endl;
+  //for (std::pair<double, double> q : airports) {
+    //std::cout << q.first << " " << q.second << std::endl;
+  //}
+  std::cout << airports[7].first << " " << airports[7].second << std::endl;
+  std::cout << routes[1][0].first << " " << routes[1][0].second << std::endl;
+  std::cout << routes[2965][0].first << " " << routes[2965][0].second << std::endl;
+
+
+
+  std::cout << "BFS testing" << std::endl;
+  //BFS testing
+  BFS bfs(1, 11051, 14110, &routes);
+  std::vector<int> path = bfs.run();
+  for (int q : path) std::cout << q << " ";
 }

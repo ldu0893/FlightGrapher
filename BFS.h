@@ -6,13 +6,15 @@
 class BFS {
     public:
         BFS();
-        BFS(int start, int end, int size, *mp);
+        BFS(int start, int end, int size, std::map<int, std::vector<std::pair<int, long double>>>* routes);
+        void clear();
+        std::vector<int> run();
     private:
-        std::queue<int> queue;
+        std::queue<std::vector<int>> queue;
         int start;
         int end;
         int size;
         int dist;
         std::vector<int> visited;
-        std::map<int, std::vector<std::pair<int, long double>>>* mp;
-}
+        std::map<int, std::vector<std::pair<int, long double>>>* routes;
+};
