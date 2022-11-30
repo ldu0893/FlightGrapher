@@ -8,6 +8,8 @@ using namespace std;
 class PageRank
 {
   public:
+    PageRank();
+
     //adjust adj matrix
     void makeA(int num, double damping);
 

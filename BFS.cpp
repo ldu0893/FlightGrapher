@@ -12,7 +12,7 @@ BFS::BFS() {
 
 BFS::BFS(int start, int end, int size, std::map<int, std::vector<std::pair<int, long double>>>* routes) : start(start), end(end), size(size), routes(routes) {
     visited = std::vector<int>(size);
-    queue.push({0, start});
+    queue.push({start});
     visited[start]=1;
 }
 
@@ -26,7 +26,7 @@ void BFS::clear() {
     routes = NULL;
 }
 
-std::pair<std::vector<int>, int dist> BFS::run() {
+std::vector<int> BFS::run() {
     while (!queue.empty()) {
         std::vector<int> curr = queue.front();
         if (DEBUG) for (int q : curr) std::cout << q << " ";

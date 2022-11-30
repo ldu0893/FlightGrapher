@@ -60,6 +60,16 @@ long double distance(long double lat1, long double long1,
  
     return ans;
 }
+#define SIZE 14110
+std::vector<std::vector<int>> createAdjMatrix(std::map<int, std::vector<std::pair<int, long double>>>* routes, std::map<int, std::pair<long double, long double>>* airports) {
+  std::vector<std::vector<int>> matrix = std::vector<std::vector<int>>(SIZE, std::vector<int>(SIZE));
+  for (std::map<int, std::vector<pair<int, long double>>>::iterator it = routes->begin(); it!=routes->end();it++) {
+    for  (std::pair<int, long double> p : it->second) {
+      matrix[it->first][p.first] = 1;
+    }
+  }
+  return matrix;
+}
 
 
 map <int, vector<pair<int, long double> > > routes;
@@ -74,9 +84,11 @@ int main() {
   //for (std::pair<double, double> q : airports) {
     //std::cout << q.first << " " << q.second << std::endl;
   //}
+  std::cout << std::endl << "Parse testing" << std::endl;
   std::cout << airports[7].first << " " << airports[7].second << std::endl;
   std::cout << routes[1][0].first << " " << routes[1][0].second << std::endl;
   std::cout << routes[2965][0].first << " " << routes[2965][0].second << std::endl;
+  std::cout << std::endl;
 
 
 
@@ -85,4 +97,11 @@ int main() {
   BFS bfs(1, 11051, 14110, &routes);
   std::vector<int> path = bfs.run();
   for (int q : path) std::cout << q << " ";
+  std::cout << std::endl << std::endl;
+
+
+  std::cout << "PageRank testing" << std::endl;
+  std::vector<std::vector<int>> adj = createAdjMatrix(&routes, &airports);
+  std::cout << adj[2927][1] << std::endl;
+
 }
