@@ -60,16 +60,33 @@ long double distance(long double lat1, long double long1,
  
     return ans;
 }
-#define SIZE 14110
-std::vector<std::vector<int>> createAdjMatrix(std::map<int, std::vector<std::pair<int, long double>>>* routes, std::map<int, std::pair<long double, long double>>* airports) {
-  std::vector<std::vector<int>> matrix = std::vector<std::vector<int>>(SIZE, std::vector<int>(SIZE));
-  for (std::map<int, std::vector<pair<int, long double>>>::iterator it = routes->begin(); it!=routes->end();it++) {
-    for  (std::pair<int, long double> p : it->second) {
-      matrix[it->first][p.first] = 1;
+
+void normMatrixCols(std::vector<std::vector<double>>& matrix) {
+  for (int j=0;j<matrix[0].size();j++) {
+    int sum=0;
+    for (int i=0;i<matrix.size();i++) {
+      sum+=matrix[i][j];
+    }
+    for (int i=0;i<matrix.size();i++) {
+      matrix[i][j]/=sum;
     }
   }
+}
+
+
+#define SIZE 14110
+std::vector<std::vector<double>> createAdjMatrix(std::map<int, std::vector<std::pair<int, long double>>>* routes, std::map<int, std::pair<long double, long double>>* airports) {
+  std::vector<std::vector<double>> matrix = std::vector<std::vector<double>>(SIZE, std::vector<double>(SIZE));
+  for (std::map<int, std::vector<pair<int, long double>>>::iterator it = routes->begin(); it!=routes->end();it++) {
+    for  (std::pair<int, long double> p : it->second) {
+      matrix[p.first][it->first] = 1.0;
+    }
+  }
+  normMatrixCols(matrix);
   return matrix;
 }
+
+
 
 
 map <int, vector<pair<int, long double> > > routes;
@@ -88,6 +105,7 @@ int main() {
   std::cout << airports[7].first << " " << airports[7].second << std::endl;
   std::cout << routes[1][0].first << " " << routes[1][0].second << std::endl;
   std::cout << routes[2965][0].first << " " << routes[2965][0].second << std::endl;
+  std::cout << routes[3077].size() << std::endl;
   std::cout << std::endl;
 
 
@@ -101,7 +119,14 @@ int main() {
 
 
   std::cout << "PageRank testing" << std::endl;
-  std::vector<std::vector<int>> adj = createAdjMatrix(&routes, &airports);
-  std::cout << adj[2927][1] << std::endl;
+  std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
+  double sum=0;
+  int count=0;
+  for (int j=0;j<adj[3077].size();j++) {
+    sum+=adj[j][3077];
+    if (adj[j][3077]!=0) count++;
+  }
+  std::cout << count << " " << sum << std::endl;
+  std::cout << adj[2927][3077] << std::endl;
 
 }
