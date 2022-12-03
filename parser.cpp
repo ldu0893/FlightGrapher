@@ -1,5 +1,6 @@
 #include "parser.h"
 #include <iostream>
+#include "globals.h"
 
 
 #include <fstream>
@@ -14,7 +15,7 @@ Parser::Parser() {
 }
 int Parser::isNumber(string s)
 {
-    for (int i = 0; i < s.length(); i++){
+    for (size_t i = 0; i < s.length(); i++){
         if (isdigit(s[i]) == false)
             return -1;
       }
@@ -64,12 +65,16 @@ long double Parser::distance(long double lat1, long double long1,
 }
 
 
-std::map<int, std::vector<std::pair<int, long double>>> Parser::getRoutes() {
+std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>> Parser::getRoutes() {
     return routes;
 }
 
-std::map<int, std::pair<long double, long double>> Parser::getAirports() {
+std::vector<std::pair<long double, long double>> Parser::getAirports() {
     return airports;
+}
+
+std::vector<int> Parser::getAirportIds() {
+  return airport_ids;
 }
 
 void Parser::runParse() {
@@ -110,7 +115,10 @@ void Parser::runParse() {
               int id_id = std::stoi(id);
               double lat_id = std::stod(lat);
               double lon_id = std::stod(lon);
-              airports[id_id] = pair<double, double>(lat_id, lon_id);
+              id_to_index[id_id] = airport_ids.size();
+              airport_ids.push_back(id_id);
+              airports.push_back(pair<double, double>(lat_id, lon_id));
+              routes.push_back(std::priority_queue<psd, vector<psd>, greater<psd>>());
             }
               
       
@@ -123,6 +131,7 @@ void Parser::runParse() {
 
     input_file.close();
 
+  std::cout << "done parsing airports" << std::endl;
 
     //routes
     input_file.open("routes.dat");
@@ -138,8 +147,8 @@ void Parser::runParse() {
 
       // for(int i = 0; i<20; i++){
       //   input_file >> input;
+
       while(input_file >> input){
-        int numNums=0;
         for(size_t i = 0; i < input.size(); i++) {
           cur = input[i];
 
@@ -169,12 +178,13 @@ void Parser::runParse() {
         string depart = outputStrings[3];
         string destination = outputStrings[5];
         
-        int depart_id = isNumber(depart);
-        int destination_id = isNumber(destination);
+        if(isNumber(depart) != -1 && isNumber(destination) != -1){
+          int depart_id = id_to_index[isNumber(depart)];
+          int destination_id = id_to_index[isNumber(destination)];
          // mp[depart].push_back({destination, 0});
-        if(depart_id != -1 && destination_id != -1){
+            //std::cout << depart_id << " " << destination_id << std::endl;
             //routes[depart_id].push_back({destination_id, distance(0, 0, 0, 0)});
-            routes[depart_id].push_back({destination_id,distance(airports[depart_id].first,airports[depart_id].second,airports[destination_id].first,airports[destination_id].second)});
+            routes[depart_id].push(psd(distance(airports[depart_id].first,airports[depart_id].second,airports[destination_id].first,airports[destination_id].second), destination_id));
         }
         
       }
