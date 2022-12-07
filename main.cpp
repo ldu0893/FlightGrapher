@@ -1,6 +1,8 @@
 #include "parser.h"
 #include "globals.h"
 #include "BFS.h"
+#include "dijkstra.h"
+#include "PageRank.h"
 #include <iostream>
 
 
@@ -76,21 +78,20 @@ void normMatrixCols(std::vector<std::vector<double>>& matrix) {
 }
 
 
-#define SIZE 14110
-std::vector<std::vector<double>> createAdjMatrix(std::map<int, std::vector<std::pair<int, long double>>>* routes, std::map<int, std::pair<long double, long double>>* airports) {
-  std::vector<std::vector<double>> matrix = std::vector<std::vector<double>>(SIZE, std::vector<double>(SIZE));
-  for (std::map<int, std::vector<pair<int, long double>>>::iterator it = routes->begin(); it!=routes->end();it++) {
-    for  (std::pair<int, long double> p : it->second) {
-      matrix[p.first][it->first] = 1.0;
+//std::vector<std::vector<double>> createAdjMatrix(std::>* routes, std::map<int, std::pair<long double, long double>>* airports) {
+std::vector<std::vector<double>> createAdjMatrix(std::vector <priority_queue<psd, vector<psd>, greater<psd>>>* routes, std::vector<std::pair<long double, long double>>* airports) {
+  std::vector<std::vector<double>> matrix = std::vector<std::vector<double>>(airports->size(), std::vector<double>(airports->size()));
+  for (int i=0;i<routes->size();i++) {
+    std::priority_queue<psd, std::vector<psd>, std::greater<psd>> queue = (*routes)[i];
+    while (!queue.empty()) {
+      psd p = queue.top();
+      queue.pop();
+
+      matrix[p.second][i] = (double) p.first;
     }
   }
-  normMatrixCols(matrix);
   return matrix;
 }
-
-
-
-
 std::vector <priority_queue<psd, vector<psd>, greater<psd>>> routes;
 std::vector<std::pair<long double, long double>> airports;
 std::vector<int> airport_ids;
@@ -107,23 +108,66 @@ int main() {
     //std::cout << q.first << " " << q.second << std::endl;
   //}
   std::cout << std::endl << "Parse testing" << std::endl;
-  std::cout << airports[7].first << " " << airports[7].second << std::endl;
-  std::cout << routes[1].top().first << " " << routes[1].top().second << std::endl;
-  std::cout << airport_ids[2965] << " " << routes[2965].top().first << " " << airport_ids[routes[2965].top().second] << std::endl;
-  std::cout << routes[3077].size() << std::endl;
+  //std::cout << airports[7].first << " " << airports[7].second << std::endl;
+  //std::cout << routes[1].top().first << " " << routes[1].top().second << std::endl;
+  //std::cout << airport_ids[2965] << " " << routes[2965].top().first << " " << airport_ids[routes[2965].top().second] << std::endl;
+  //std::cout << routes[3077].size() << std::endl;
   std::cout << std::endl;
 
 
 
   //std::cout << "BFS testing" << std::endl;
   ////BFS testing
-  //BFS bfs(1, 11051, 14110, &routes);
+  //BFS bfs(1, 5500, routes.size(), &routes);
+  //std::cout << airport_ids[1] << " " << airport_ids[5500] << std::endl;
+  //std::cout << "inited bfs" << std::endl;
   //std::vector<int> path = bfs.run();
   //for (int q : path) std::cout << q << " ";
   //std::cout << std::endl << std::endl;
 
 
-  //std::cout << "PageRank testing" << std::endl;
+  //std::cout << "DFS testing" << std::endl;
+  //Dijkstra dijkstra(routes.size(), &routes);
+  //dijkstra.run();
+  //std::cout << std::endl << std::endl << std::endl;
+
+
+  std::cout << "PageRank testing" << std::endl;
+  std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
+  //for (int i=0;i<adj.size();i++) {
+  //  for (int j=0;j<adj.size();j++) {
+  //    std::cout << adj[i][j] << " ";
+  //  }
+  //  std::cout << std::endl;
+  //}
+  PageRank pagerank(adj);
+  pagerank.matrix(adj.size(), 0.85);
+  vector<double> ranks;
+
+  cout << "gen rank" << endl;
+  vector<double> re = pagerank.rank(ranks, 100);
+
+  cout << re[0] << endl;
+
+  int count=0;
+  double dmax = DBL_MAX;
+  priority_queue<psd> pqueue;
+
+  for (int i=0;i<re.size();i++) {
+    pqueue.push({re[i], i});
+  }
+
+  std::cout << "print airport" << std::endl;
+  int cut = 0;
+  while (!pqueue.empty() && cut < 30) {
+    cut++;
+    psd p = pqueue.top();
+    pqueue.pop();
+    std::cout << airport_ids[p.second] << "      " << p.first << std::endl;
+  }
+
+
+
   //std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
   //double sum=0;
   //int count=0;

@@ -3,65 +3,73 @@ using namespace std;
 #include <queue>
 #include <vector>
 #include<map>
+#include <float.h>
+#include "globals.h"
 
 #include "dijkstra.h"
 
-Dijkstra::Dijkstra(int airport_num) : airport_num(airport_num) {
+Dijkstra::Dijkstra(int airport_num, std::vector<std::priority_queue<psd, vector<psd>, std::greater<psd>>>* routes) :
+    airport_num(airport_num),
+    routes(routes),
+    visited(airport_num, false),
+    distance(airport_num, DBL_MAX),
+    parent(airport_num)
+{
 
-    mp[3].push({2, 1});
-    mp[3].push({6, 2});
-    mp[1].push({5, 0});
-    mp[1].push({9, 2});
-    mp[2].push({8, 0});
-    mp[0].push({});
-    cout << "map_size : " << mp.size() << endl;    //input map
-    
-    
+}
 
-   int start, end;
+void Dijkstra::reset() {
+    visited = std::vector<bool>(airport_num, false);
+    distance = std::vector<long double>(airport_num, DBL_MAX);
+    parent = std::vector<int>(airport_num);
+    candidate = std::queue<int>();
+}
+
+
+std::vector<int> Dijkstra::run() {
+    cout << "map_size : " << (*routes).size() << endl;    //input map
+    size_t start, end;
    
-  cout << "select start from 0 ~ " << mp.size() -1 << endl;
-   cin >> start;
-   while(start < 0 || start >= mp.size()){
-     cout << "incorrect input for start" << endl;
-     cout << "select start from 0 ~ " << mp.size() -1 << endl;
-     cin >> start;
-   }     //select start point
+    cout << "select start from 0 ~ " << (*routes).size() -1 << endl;
+    cin >> start;
+    while(start < 0 || start >= (*routes).size()){
+        cout << "incorrect input for start" << endl;
+        cout << "select start from 0 ~ " << (*routes).size() -1 << endl;
+        cin >> start;
+    }     //select start point
    
   
-  cout << "select end from 0 ~ " << mp.size() -1 << endl;
-   cin >> end;
-   while(end < 0 || end >= mp.size()){
-     cout << "incorrect input for end" << endl;
-     cout << "select end from 0 ~ " << mp.size() -1 << endl;
-     cin >> end;
+    cout << "select end from 0 ~ " << (*routes).size() -1 << endl;
+    cin >> end;
+    while(end < 0 || end >= (*routes).size()){
+        cout << "incorrect input for end" << endl;
+        cout << "select end from 0 ~ " << (*routes).size() -1 << endl;
+        cin >> end;
     }    //select end point
 
-  
-    vector <bool> vistied(mp.size(), false);
-    vector <double> distance(mp.size(), 1e10);
-    vector <int> parent(mp.size());
-    queue <int> candidate;
-    queue <int> tmp;
-    
-    //initialize
-  
-    vistied[start] = true;
+    visited[start] = true;
     distance[start] = 0;
     parent[start] = -1;
     candidate.push(start);
     //initialize start 
     
-     while (!candidate.empty()) {
+    while (!candidate.empty()) {
+        std::queue<int> tmp = candidate;
+        std::cout << "Current queue: ";
+        while (!tmp.empty()) {
+            std::cout << tmp.front() << " ";
+            tmp.pop();
+        }
+        std::cout << std::endl;
         // int now = candidate.front();
         // candidate.pop();
-       int now = findmin(distance, candidate);
-       remove(now,candidate);
-        vistied[now] = true;
+        int now = findmin(distance, candidate);
+        remove(now,candidate);
+        visited[now] = true;
         bool first = true;
-        while (!mp[now].empty()) {
-            auto p = mp[now].top();
-            if (!vistied[p.second]) {
+        while (!(*routes)[now].empty()) {
+            auto p = (*routes)[now].top();
+            if (!visited[p.second]) {
                 if (first) {
                     candidate.push(p.second);
                     first = false;
@@ -73,21 +81,24 @@ Dijkstra::Dijkstra(int airport_num) : airport_num(airport_num) {
                     distance[p.second] = now_d;
                 }
             }
-            mp[now].pop();
+            (*routes)[now].pop();
         }
     }
-    if(distance[end] == 1e10){
-      cout << "cannot reach " << end <<" from " << start << endl;
+    if (distance[end] == DBL_MAX) {
+        cout << "cannot reach " << end <<" from " << start << endl;
+    } else {
+        std::vector<int> path;
+        printf("start from %zu to %zu, distance %Lg\n", start, end, distance[end]);
+        printf("Path :  ");
+        while (parent[end] != -1) {
+            path.push_back((int)end);
+            cout << end << " <-- ";
+            end = parent[end];
+        }
+        cout << start;
+        return path;
     }
-   else{
-    printf("start from %d to %d, distance %g\n", start, end, distance[end]);
-    printf("Path :  ");
-    while (parent[end] != -1) {
-        cout << end << " <-- ";
-        end = parent[end];
-    }
-    cout << start;
-     }
+    return {-1};
 
 }
 
@@ -101,7 +112,7 @@ void Dijkstra::remove(int t, queue<int>& q)
     int cnt = 0;
  
     // Finding the value to be removed
-    while (q.front() != t and !q.empty()) {
+    while (q.front() != t && !q.empty()) {
         ref.push(q.front());
         q.pop();
         cnt++;
@@ -138,10 +149,10 @@ void Dijkstra::remove(int t, queue<int>& q)
     }
 }
 
-int Dijkstra::findmin(vector<double> v, queue<int> q ){
+int Dijkstra::findmin(vector<long double> v, queue<int> q ){
     queue<int> qtmp = q;
-    vector<double> vtmp = v;
-    double min_val = 1e10;
+    vector<long double> vtmp = v;
+    double min_val = DBL_MAX;
     int min_idx = -1;
     
     while(!qtmp.empty()){
@@ -155,7 +166,3 @@ int Dijkstra::findmin(vector<double> v, queue<int> q ){
     
     return min_idx;
 }
-
-int main()
-{
-    }
