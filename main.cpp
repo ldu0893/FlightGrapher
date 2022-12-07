@@ -116,55 +116,59 @@ int main() {
 
 
 
-  //std::cout << "BFS testing" << std::endl;
-  ////BFS testing
-  //BFS bfs(1, 5500, routes.size(), &routes);
-  //std::cout << airport_ids[1] << " " << airport_ids[5500] << std::endl;
-  //std::cout << "inited bfs" << std::endl;
-  //std::vector<int> path = bfs.run();
-  //for (int q : path) std::cout << q << " ";
-  //std::cout << std::endl << std::endl;
+  std::cout << "BFS testing" << std::endl;
+  //BFS testing
+  BFS bfs(300, 600, routes.size(), &routes);
+  std::cout << airport_ids[300] << " " << airport_ids[600] << std::endl;
+  std::cout << "inited bfs" << std::endl;
+  std::vector<int> path = bfs.run();
+  for (int q : path) std::cout << airport_ids[q] << " ";
+  std::cout << std::endl << std::endl;
 
 
-  //std::cout << "DFS testing" << std::endl;
-  //Dijkstra dijkstra(routes.size(), &routes);
-  //dijkstra.run();
-  //std::cout << std::endl << std::endl << std::endl;
+  std::cout << "Dijkstras testing" << std::endl;
+  std::cout << airport_ids[1] << std::endl;
+  Dijkstra dijkstra(routes.size(), &routes);
+  std::vector<int> pat = dijkstra.run();
+  for (int q : pat) {
+    std::cout << airport_ids[q] << " ";
+  }
+  std::cout << std::endl << std::endl << std::endl;
 
 
-  std::cout << "PageRank testing" << std::endl;
-  std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
-  //for (int i=0;i<adj.size();i++) {
-  //  for (int j=0;j<adj.size();j++) {
-  //    std::cout << adj[i][j] << " ";
-  //  }
-  //  std::cout << std::endl;
+  //std::cout << "PageRank testing" << std::endl;
+  //std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
+  ////for (int i=0;i<adj.size();i++) {
+  ////  for (int j=0;j<adj.size();j++) {
+  ////    std::cout << adj[i][j] << " ";
+  ////  }
+  ////  std::cout << std::endl;
+  ////}
+  //PageRank pagerank(adj);
+  //pagerank.matrix(adj.size(), 0.85);
+  //vector<double> ranks;
+
+  //cout << "gen rank" << endl;
+  //vector<double> re = pagerank.rank(ranks, 100);
+
+  //cout << re[0] << endl;
+
+  //int count=0;
+  //double dmax = DBL_MAX;
+  //priority_queue<psd> pqueue;
+
+  //for (int i=0;i<re.size();i++) {
+  //  pqueue.push({re[i], i});
   //}
-  PageRank pagerank(adj);
-  pagerank.matrix(adj.size(), 0.85);
-  vector<double> ranks;
 
-  cout << "gen rank" << endl;
-  vector<double> re = pagerank.rank(ranks, 100);
-
-  cout << re[0] << endl;
-
-  int count=0;
-  double dmax = DBL_MAX;
-  priority_queue<psd> pqueue;
-
-  for (int i=0;i<re.size();i++) {
-    pqueue.push({re[i], i});
-  }
-
-  std::cout << "print airport" << std::endl;
-  int cut = 0;
-  while (!pqueue.empty() && cut < 30) {
-    cut++;
-    psd p = pqueue.top();
-    pqueue.pop();
-    std::cout << airport_ids[p.second] << "      " << p.first << std::endl;
-  }
+  //std::cout << "print airport" << std::endl;
+  //int cut = 0;
+  //while (!pqueue.empty() && cut < 30) {
+  //  cut++;
+  //  psd p = pqueue.top();
+  //  pqueue.pop();
+  //  std::cout << airport_ids[p.second] << "      " << p.first << std::endl;
+  //}
 
 
 
