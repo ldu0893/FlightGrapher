@@ -22,7 +22,7 @@ void Dijkstra::reset() {
     visited = std::vector<bool>(airport_num, false);
     distance = std::vector<long double>(airport_num, DBL_MAX);
     parent = std::vector<int>(airport_num);
-    candidate = std::queue<int>();
+    candidate = std::priority_queue<psd, vector<psd>, greater<psd>>();
 }
 
 
@@ -50,36 +50,38 @@ std::vector<int> Dijkstra::run() {
     visited[start] = true;
     distance[start] = 0;
     parent[start] = -1;
-    candidate.push(start);
+    for (int i=0;i<airport_num;i++) {
+        candidate.push({distance[i], i});
+    }
+    candidate.push({0, start});
     //initialize start 
+
+
     
     while (!candidate.empty()) {
-        std::queue<int> tmp = candidate;
-        std::cout << "Current queue: ";
-        while (!tmp.empty()) {
-            std::cout << tmp.front() << " ";
-            tmp.pop();
-        }
-        std::cout << std::endl;
+        std::priority_queue<psd, vector<psd>, greater<psd>> tmp = candidate;
+        //std::cout << "Current queue: ";
+        //while (!tmp.empty()) {
+        //    psd q = tmp.top();
+        //    std::cout << q.second << " ";
+        //    tmp.pop();
+        //}
+        //std::cout << std::endl;
         // int now = candidate.front();
         // candidate.pop();
-        int now = findmin(distance, candidate);
-        remove(now,candidate);
+        int now = candidate.top().second;
+        candidate.pop();
         visited[now] = true;
-        bool first = true;
         while (!(*routes)[now].empty()) {
             auto p = (*routes)[now].top();
             if (!visited[p.second]) {
-                if (first) {
-                    candidate.push(p.second);
-                    first = false;
-                } 
-                cout << now << " : " << p.first << ", " << p.second << endl;
-                int now_d = p.first + distance[now];
-                if (distance[p.second] > now_d) { // relax
+                long double alt = distance[now] + p.first;
+                if (alt < distance[p.second]) {
+                    distance[p.second] = alt;
                     parent[p.second] = now;
-                    distance[p.second] = now_d;
+                    update(p.second, alt);
                 }
+                //cout << now << " : " << p.first << ", " << p.second << endl;
             }
             (*routes)[now].pop();
         }
@@ -88,18 +90,32 @@ std::vector<int> Dijkstra::run() {
         cout << "cannot reach " << end <<" from " << start << endl;
     } else {
         std::vector<int> path;
-        printf("start from %zu to %zu, distance %Lg\n", start, end, distance[end]);
-        printf("Path :  ");
+        printf("distance %Lg\n", distance[end]);
+        //printf("start from %zu to %zu, distance %Lg\n", start, end, distance[end]);
+        //printf("Path :  ");
         while (parent[end] != -1) {
             path.push_back((int)end);
-            cout << end << " <-- ";
+            //cout << end << " <-- ";
             end = parent[end];
         }
-        cout << start;
+        path.push_back(start);
+        //cout << start;
         return path;
     }
     return {-1};
 
+}
+
+void Dijkstra::update(int a, long double alt) {
+    priority_queue<psd, vector<psd>, greater<psd>> tmp;
+    while (!candidate.empty()) {
+        psd q = candidate.top();
+        candidate.pop();
+        if (q.second == a) tmp.push({alt, a});
+        else tmp.push(q);
+    }
+    
+    candidate = tmp;
 }
 
 void Dijkstra::remove(int t, queue<int>& q)
