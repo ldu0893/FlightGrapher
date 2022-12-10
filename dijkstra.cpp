@@ -8,14 +8,14 @@ using namespace std;
 
 #include "dijkstra.h"
 
-Dijkstra::Dijkstra(int airport_num, std::vector<std::priority_queue<psd, vector<psd>, std::greater<psd>>>* routes) :
+Dijkstra::Dijkstra(int airport_num, std::vector<std::priority_queue<psd, vector<psd>, std::greater<psd>>> routes) :
     airport_num(airport_num),
-    routes(routes),
     visited(airport_num, false),
     distance(airport_num, DBL_MAX),
     parent(airport_num)
 {
-
+    legacy = routes;
+    this->routes = &legacy;
 }
 
 void Dijkstra::reset() {

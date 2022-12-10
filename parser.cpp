@@ -82,6 +82,7 @@ void Parser::runParse() {
 
     ifstream input_file;
     input_file.open("airports.dat");
+    int idnot = -1;
     if (input_file.good()) {
         string input;
         char cur;
@@ -115,6 +116,10 @@ void Parser::runParse() {
               int id_id = std::stoi(id);
               double lat_id = std::stod(lat);
               double lon_id = std::stod(lon);
+              if (airport_ids.size()==0) {
+                idnot = id_id;
+                std::cout << "idnot " << idnot << std::endl;
+              }
               id_to_index[id_id] = airport_ids.size();
               airport_ids.push_back(id_id);
               airports.push_back(pair<double, double>(lat_id, lon_id));
@@ -179,6 +184,21 @@ void Parser::runParse() {
         string destination = outputStrings[5];
         
         if(isNumber(depart) != -1 && isNumber(destination) != -1){
+          //std::cout << depart << " " << destination << std::endl;
+          int q = isNumber(destination);
+          if (id_to_index[q] == 0 && idnot != q) {
+            outputStrings.clear();
+            builtStr = "";
+            isQuote=false;
+            continue;
+          }
+          q = isNumber(depart);
+          if (id_to_index[q] == 0 && idnot != q) {
+            outputStrings.clear();
+            builtStr = "";
+            isQuote=false;
+            continue;
+          }
           int depart_id = id_to_index[isNumber(depart)];
           int destination_id = id_to_index[isNumber(destination)];
          // mp[depart].push_back({destination, 0});

@@ -128,7 +128,7 @@ int main() {
 
   std::cout << "Dijkstras testing" << std::endl;
   std::cout << airport_ids[1] << std::endl;
-  Dijkstra dijkstra(routes.size(), &routes);
+  Dijkstra dijkstra(routes.size(), routes);
   std::vector<int> pat = dijkstra.run();
   for (int q : pat) {
     std::cout << airport_ids[q] << " ";
@@ -136,50 +136,45 @@ int main() {
   std::cout << std::endl << std::endl << std::endl;
 
 
-  //std::cout << "PageRank testing" << std::endl;
-  //std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
-  ////for (int i=0;i<adj.size();i++) {
-  ////  for (int j=0;j<adj.size();j++) {
-  ////    std::cout << adj[i][j] << " ";
-  ////  }
-  ////  std::cout << std::endl;
-  ////}
-  //PageRank pagerank(adj);
-  //pagerank.matrix(adj.size(), 0.85);
-  //vector<double> ranks;
 
-  //cout << "gen rank" << endl;
-  //vector<double> re = pagerank.rank(ranks, 100);
+  std::cout << "num out from 0 " << routes[0].size() << std::endl;
+  std::cout << "num out fro 1 " << routes[1].size() << std::endl;
 
-  //cout << re[0] << endl;
-
-  //int count=0;
-  //double dmax = DBL_MAX;
-  //priority_queue<psd> pqueue;
-
-  //for (int i=0;i<re.size();i++) {
-  //  pqueue.push({re[i], i});
+  std::cout << "PageRank testing" << std::endl;
+  std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
+  //for (int i=0;i<adj.size();i++) {
+  //  for (int j=0;j<adj.size();j++) {
+  //    std::cout << adj[i][j] << " ";
+  //  }
+  //  std::cout << std::endl;
   //}
+  PageRank pagerank(adj);
+  pagerank.matrix(adj.size(), 0.85);
+  vector<double> ranks;
 
-  //std::cout << "print airport" << std::endl;
-  //int cut = 0;
-  //while (!pqueue.empty() && cut < 30) {
-  //  cut++;
-  //  psd p = pqueue.top();
-  //  pqueue.pop();
-  //  std::cout << airport_ids[p.second] << "      " << p.first << std::endl;
-  //}
+  cout << "gen rank" << endl;
+  vector<double> re = pagerank.rank(ranks, 100);
+
+  cout << re[0] << endl;
+
+  int count=0;
+  double dmax = DBL_MAX;
+  priority_queue<psd> pqueue;
+
+  for (int i=0;i<re.size();i++) {
+    pqueue.push({re[i], i});
+  }
+
+  std::cout << "print airport" << std::endl;
+  int cut = 0;
+  while (!pqueue.empty() && cut < 30) {
+    cut++;
+    psd p = pqueue.top();
+    pqueue.pop();
+    std::cout << airport_ids[p.second] << "      " << p.first << std::endl;
+  }
 
 
 
-  //std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
-  //double sum=0;
-  //int count=0;
-  //for (int j=0;j<adj[3077].size();j++) {
-  //  sum+=adj[j][3077];
-  //  if (adj[j][3077]!=0) count++;
-  //}
-  //std::cout << count << " " << sum << std::endl;
-  //std::cout << adj[2927][3077] << std::endl;
-
+  
 }

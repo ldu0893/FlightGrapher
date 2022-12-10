@@ -58,6 +58,8 @@ vector<double> PageRank::rank(vector<double> starting, int time) {
         starting[i] = rand();
     }
 
+    //starting = normalize(starting);
+
     vector<double> temp = starting;
     vector<double> temp2 = starting;
 
@@ -70,12 +72,13 @@ vector<double> PageRank::rank(vector<double> starting, int time) {
                 temp2[i] += adj[i][j] * temp[j];
                 if (state)
                 {
-                 //normalize(temp2);
+                 normalize(temp2);
                 }
 
             }     
         }
         temp = temp2;
+        std::cout << "time " << time << " first " << temp[0] << " second " << temp[1] << std::endl;
     }
     //result is stored in the pagerank result
     result = temp;
@@ -84,6 +87,7 @@ vector<double> PageRank::rank(vector<double> starting, int time) {
 
 //helper function for pagerank algorithm
 vector<double> PageRank::normalize( vector<double> output) {
+    std::cout << "norm" << std::endl;
     double sum = 0.0;
     //normalization operation
     for(auto it = output.begin(); it != output.end(); ++it){
