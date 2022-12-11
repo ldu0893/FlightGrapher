@@ -6,10 +6,6 @@
 
 #include "globals.h"
 
-BFS::BFS() {
-
-}
-
 BFS::BFS(int start, int end, int size, std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>>* routes) : start(start), end(end), size(size), routes(routes) {
     visited = std::vector<int>(size);
     queue.push({start});
