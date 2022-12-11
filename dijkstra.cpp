@@ -14,8 +14,7 @@ Dijkstra::Dijkstra(int airport_num, std::vector<std::priority_queue<psd, vector<
     distance(airport_num, DBL_MAX),
     parent(airport_num)
 {
-    legacy = routes;
-    this->routes = &legacy;
+    this->routes = routes;
 }
 Dijkstra::Dijkstra(int start, int end, int airport_num, std::vector<std::priority_queue<psd, vector<psd>, std::greater<psd>>> routes) :
     start(start),
@@ -25,8 +24,7 @@ Dijkstra::Dijkstra(int start, int end, int airport_num, std::vector<std::priorit
     distance(airport_num, DBL_MAX),
     parent(airport_num)
 {
-    legacy = routes;
-    this->routes = &legacy;
+    this->routes = routes;
 }
 void Dijkstra::reset() {
     visited = std::vector<bool>(airport_num, false);
@@ -63,8 +61,8 @@ std::vector<int> Dijkstra::run() {
         if (now == end) break;
         candidate.pop();
         visited[now] = true;
-        while (!(*routes)[now].empty()) {
-            auto p = (*routes)[now].top();
+        while (!routes[now].empty()) {
+            auto p = routes[now].top();
             if (!visited[p.second]) {
                 long double alt = distance[now] + p.first;
                 if (alt < distance[p.second]) {
@@ -74,7 +72,7 @@ std::vector<int> Dijkstra::run() {
                 }
                 //cout << now << " : " << p.first << ", " << p.second << endl;
             }
-            (*routes)[now].pop();
+            routes[now].pop();
         }
     }
     if (distance[end] == DBL_MAX) {
@@ -108,22 +106,4 @@ void Dijkstra::update(int a, long double alt) {
     }
     
     candidate = tmp;
-}
-
-int Dijkstra::findmin(vector<long double> v, queue<int> q ){
-    queue<int> qtmp = q;
-    vector<long double> vtmp = v;
-    double min_val = DBL_MAX;
-    int min_idx = -1;
-    
-    while(!qtmp.empty()){
-        int idx = qtmp.front();
-        if(min_val > vtmp[idx]){
-            min_val = vtmp[idx];
-            min_idx = idx;
-        }
-        qtmp.pop();
-    }
-    
-    return min_idx;
 }

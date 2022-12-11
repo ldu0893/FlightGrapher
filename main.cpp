@@ -27,66 +27,9 @@ int isNumber(string s)
         if (isdigit(s[i]) == false)
             return -1;
       }
-    int num = stoi(s);
-  return num;
+    return stoi(s);
 }
 
-long double toRadians(const long double degree)
-{
-    // cmath library in C++
-    // defines the constant
-    // M_PI as the value of
-    // pi accurate to 1e-30
-    long double one_deg = (M_PI) / 180;
-    return (one_deg * degree);
-}
- 
-long double distance(long double lat1, long double long1,
-                     long double lat2, long double long2)
-{
-    // Convert the latitudes
-    // and longitudes
-    // from degree to radians.
-    lat1 = toRadians(lat1);
-    long1 = toRadians(long1);
-    lat2 = toRadians(lat2);
-    long2 = toRadians(long2);
-     
-    // Haversine Formula
-    long double dlong = long2 - long1;
-    long double dlat = lat2 - lat1;
- 
-    long double ans = pow(sin(dlat / 2), 2) +
-                          cos(lat1) * cos(lat2) *
-                          pow(sin(dlong / 2), 2);
- 
-    ans = 2 * asin(sqrt(ans));
- 
-    // Radius of Earth in
-    // Kilometers, R = 6371
-    // Use R = 3956 for miles
-    long double R = 6371;
-     
-    // Calculate the result
-    ans = ans * R;
- 
-    return ans;
-}
-
-void normMatrixCols(std::vector<std::vector<double>>& matrix) {
-  for (size_t j=0;j<matrix[0].size();j++) {
-    int sum=0;
-    for (size_t i=0;i<matrix.size();i++) {
-      sum+=matrix[i][j];
-    }
-    for (size_t i=0;i<matrix.size();i++) {
-      matrix[i][j]/=sum;
-    }
-  }
-}
-
-
-//std::vector<std::vector<double>> createAdjMatrix(std::>* routes, std::map<int, std::pair<long double, long double>>* airports) {
 std::vector<std::vector<double>> createAdjMatrix(std::vector <priority_queue<psd, vector<psd>, greater<psd>>>* routes, std::vector<std::pair<long double, long double>>* airports) {
   std::vector<std::vector<double>> matrix = std::vector<std::vector<double>>(airports->size(), std::vector<double>(airports->size()));
   for (int i=0;i<routes->size();i++) {
