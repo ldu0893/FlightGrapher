@@ -336,9 +336,9 @@ bool smallcases() {
 
 //where it all starts.
 int main() {
-  outputBFS.open("outBFS.txt");
-  outputD.open("outDijkstras.txt");
-  outputP.open("outPageRank.txt");
+  outputBFS.open("Outputs/outBFS.txt");
+  outputD.open("Outputs/outDijkstras.txt");
+  outputP.open("Outputs/outPageRank.txt");
   std::string userinput;
   std::cout << "Welcome to our CS 225 Final Project!" << std::endl;
   std::cout << "Input 1 for small test cases, input 2 for data from OpenFlights" << std::endl;

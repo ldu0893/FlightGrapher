@@ -79,7 +79,7 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
 
 
     ifstream input_file;
-    input_file.open(airport);//first parse airports
+    input_file.open("data/"+airport);//first parse airports
     int idnot = -1;//idnot is used for extra map redudancy checks
     if (input_file.good()) {
         string input;
@@ -132,7 +132,7 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
 
 
     //routes
-    input_file.open(route);
+    input_file.open("data/"+route);
     if (input_file.good()) {
         string input;
         char cur;
@@ -198,7 +198,7 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
     input_file.close();
 
 
-    input_file.open(airport);    //now parsing airport names
+    input_file.open("data/"+airport);    //now parsing airport names
     if (input_file.good()) {
         string input;
         char cur;
