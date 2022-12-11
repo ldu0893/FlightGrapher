@@ -12,9 +12,9 @@ The correctness of each algorithm is further verified by the small test cases we
 
 ## Answer to the leading question
 
-Parsing the data sets of routes and airport
-We use dijkstra and BFS traversal algorithms to find the shortest path between airports
-Implementation of pagerank algorithm to find the most important airport
+1.  Parsing the data sets of routes and airport
+2.  We use dijkstra and BFS traversal algorithms to find the shortest path between airports
+3.  Implementation of pagerank algorithm to find the most important airport
 
 For Dijkstra’s, we discovered how it works with large cases and we determined how to resolve bugs where it ran for way too long.
 
