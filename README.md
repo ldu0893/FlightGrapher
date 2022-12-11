@@ -26,4 +26,6 @@ Any deliverables (report, contract, etc.) can be found in the Deliverables folde
 This program can be compiled using (g++ -o main \*.cpp) in the terminal.
 This program can be run by using (./main) or (./main.exe) in the terminal.
 
-User Interactions: When running the program, read the console carefully. It will have instructions on how to run test cases or algorithms. 
+User Interactions: When running the program, read the console carefully. It will have instructions on how to run test cases or algorithms.
+
+To modify input, you can directly modify .dat files.
