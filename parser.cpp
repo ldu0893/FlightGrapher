@@ -77,11 +77,37 @@ std::vector<int> Parser::getAirportIds() {
   return airport_ids;
 }
 
-void Parser::runParse() {
+std::map<int, int> Parser::get_indices() {
+  return id_to_index;
+}
+
+//void Parser::runParsePruned(std::string airports, std::string routes) {
+//  ifstream input_file;
+//  input_file.open(airports);
+//  if (input_file.good()) {
+//    string input;
+//    while (std::getline(input_file, input, ' ')) {
+//      
+//    }
+//  }
+//}
+
+long double Parser::distancePy(long double lat1, long double long1,
+                     long double lat2, long double long2)
+{
+  long double distance;
+  long double latdiff = (lat2 - lat1) * (lat2 - lat1);
+  long double longdiff = (long2 - long1) * (long2 - long1);
+  distance = latdiff + longdiff;
+  distance = sqrt(distance);
+  return distance;
+}
+
+void Parser::runParse(std::string airport, std::string route, int distType) {
 
 
     ifstream input_file;
-    input_file.open("airports.dat");
+    input_file.open(airport);
     int idnot = -1;
     if (input_file.good()) {
         string input;
@@ -118,7 +144,6 @@ void Parser::runParse() {
               double lon_id = std::stod(lon);
               if (airport_ids.size()==0) {
                 idnot = id_id;
-                std::cout << "idnot " << idnot << std::endl;
               }
               id_to_index[id_id] = airport_ids.size();
               airport_ids.push_back(id_id);
@@ -136,10 +161,9 @@ void Parser::runParse() {
 
     input_file.close();
 
-  std::cout << "done parsing airports" << std::endl;
 
     //routes
-    input_file.open("routes.dat");
+    input_file.open(route);
     if (input_file.good()) {
         string input;
         char cur;
@@ -204,7 +228,10 @@ void Parser::runParse() {
          // mp[depart].push_back({destination, 0});
             //std::cout << depart_id << " " << destination_id << std::endl;
             //routes[depart_id].push_back({destination_id, distance(0, 0, 0, 0)});
+            if (distType==1)
             routes[depart_id].push(psd(distance(airports[depart_id].first,airports[depart_id].second,airports[destination_id].first,airports[destination_id].second), destination_id));
+            else 
+            routes[depart_id].push(psd(distancePy(airports[depart_id].first,airports[depart_id].second,airports[destination_id].first,airports[destination_id].second), destination_id));
         }
         
       }
@@ -225,6 +252,5 @@ void Parser::runParse() {
     }
     input_file.close();
 
-    std::cout << "done parsing" << std::endl;
 }
 

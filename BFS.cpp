@@ -16,6 +16,10 @@ BFS::BFS(int start, int end, int size, std::vector<std::priority_queue<psd, std:
     visited[start]=1;
 }
 
+BFS::BFS(int size, std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>>* routes) : size(size), routes(routes) {
+    visited = std::vector<int>(size);
+}
+
 void BFS::clear() {
     queue = std::queue<std::vector<int>>();
     visited.clear();

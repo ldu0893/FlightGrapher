@@ -17,7 +17,17 @@ Dijkstra::Dijkstra(int airport_num, std::vector<std::priority_queue<psd, vector<
     legacy = routes;
     this->routes = &legacy;
 }
-
+Dijkstra::Dijkstra(int start, int end, int airport_num, std::vector<std::priority_queue<psd, vector<psd>, std::greater<psd>>> routes) :
+    start(start),
+    end(end),
+    airport_num(airport_num),
+    visited(airport_num, false),
+    distance(airport_num, DBL_MAX),
+    parent(airport_num)
+{
+    legacy = routes;
+    this->routes = &legacy;
+}
 void Dijkstra::reset() {
     visited = std::vector<bool>(airport_num, false);
     distance = std::vector<long double>(airport_num, DBL_MAX);
@@ -27,26 +37,6 @@ void Dijkstra::reset() {
 
 
 std::vector<int> Dijkstra::run() {
-    cout << "map_size : " << (*routes).size() << endl;    //input map
-    size_t start, end;
-   
-    cout << "select start from 0 ~ " << (*routes).size() -1 << endl;
-    cin >> start;
-    while(start < 0 || start >= (*routes).size()){
-        cout << "incorrect input for start" << endl;
-        cout << "select start from 0 ~ " << (*routes).size() -1 << endl;
-        cin >> start;
-    }     //select start point
-   
-  
-    cout << "select end from 0 ~ " << (*routes).size() -1 << endl;
-    cin >> end;
-    while(end < 0 || end >= (*routes).size()){
-        cout << "incorrect input for end" << endl;
-        cout << "select end from 0 ~ " << (*routes).size() -1 << endl;
-        cin >> end;
-    }    //select end point
-
     visited[start] = true;
     distance[start] = 0;
     parent[start] = -1;
@@ -87,10 +77,11 @@ std::vector<int> Dijkstra::run() {
         }
     }
     if (distance[end] == DBL_MAX) {
+        return {-1};
         cout << "cannot reach " << end <<" from " << start << endl;
     } else {
         std::vector<int> path;
-        printf("distance %Lg\n", distance[end]);
+        printf("Total distance: %Lg\n", distance[end]);
         //printf("start from %zu to %zu, distance %Lg\n", start, end, distance[end]);
         //printf("Path :  ");
         while (parent[end] != -1) {
@@ -116,53 +107,6 @@ void Dijkstra::update(int a, long double alt) {
     }
     
     candidate = tmp;
-}
-
-void Dijkstra::remove(int t, queue<int>& q)
-{
- 
-    // Helper queue to store the elements
-    // temporarily.
-    queue<int> ref;
-    int s = q.size();
-    int cnt = 0;
- 
-    // Finding the value to be removed
-    while (q.front() != t && !q.empty()) {
-        ref.push(q.front());
-        q.pop();
-        cnt++;
-    }
- 
-    // If element is not found
-    if (q.empty()) {
-        cout << "element not found!!" << endl;
-        while (!ref.empty()) {
- 
-            // Pushing all the elements back into q
-            q.push(ref.front());
-            ref.pop();
-        }
-    }
- 
-    // If element is found
-    else {
-        q.pop();
-        while (!ref.empty()) {
- 
-            // Pushing all the elements back into q
-            q.push(ref.front());
-            ref.pop();
-        }
-        int k = s - cnt - 1;
-        while (k--) {
- 
-            // Pushing elements from front of q to its back
-            int p = q.front();
-            q.pop();
-            q.push(p);
-        }
-    }
 }
 
 int Dijkstra::findmin(vector<long double> v, queue<int> q ){

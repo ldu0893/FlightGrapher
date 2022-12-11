@@ -78,7 +78,7 @@ vector<double> PageRank::rank(vector<double> starting, int time) {
             }     
         }
         temp = temp2;
-        std::cout << "time " << time << " first " << temp[0] << " second " << temp[1] << std::endl;
+        //std::cout << "time " << time << " first " << temp[0] << " second " << temp[1] << std::endl;
     }
     //result is stored in the pagerank result
     result = temp;
