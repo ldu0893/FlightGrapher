@@ -17,12 +17,13 @@ BFS: Implementation of BFS traversal on the graph
 Pagerank: Implementation of pagerank algorithm to find the most popular airports
 Dijkstra: Implementation of diskstra algorithm to find the shortest path between airports
 Main: Multiple test cases for bfs, dijkstra's and pagerank algorithm
-routes*.dat: Data holding routes between airports
-airports*.dat: Data holding airports and coordinates
+
+The output files can be found in the Outputs folder.
+The data files can be found in the data folder.
+Any deliverables (report, contract, etc.) can be found in the Deliverables folder.
 
 ## Running Instructions
 This program can be compiled using (g++ -o main \*.cpp) in the terminal.
 This program can be run by using (./main) or (./main.exe) in the terminal.
 
-=The output data is output to the console.
-Various test cases descirptions are in the main.cpp file
+User Interactions: When running the program, read the console carefully. It will have instructions on how to run test cases or algorithms. 
