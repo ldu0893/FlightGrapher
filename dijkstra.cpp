@@ -8,6 +8,7 @@ using namespace std;
 
 #include "dijkstra.h"
 
+//dijkstras constructor, no start and end
 Dijkstra::Dijkstra(int airport_num, std::vector<std::priority_queue<psd, vector<psd>, std::greater<psd>>> routes) :
     airport_num(airport_num),
     visited(airport_num, false),
@@ -16,6 +17,8 @@ Dijkstra::Dijkstra(int airport_num, std::vector<std::priority_queue<psd, vector<
 {
     this->routes = routes;
 }
+
+//dijkstras constructor with start and end
 Dijkstra::Dijkstra(int start, int end, int airport_num, std::vector<std::priority_queue<psd, vector<psd>, std::greater<psd>>> routes) :
     start(start),
     end(end),
@@ -26,6 +29,8 @@ Dijkstra::Dijkstra(int start, int end, int airport_num, std::vector<std::priorit
 {
     this->routes = routes;
 }
+
+//clear stuff
 void Dijkstra::reset() {
     visited = std::vector<bool>(airport_num, false);
     distance = std::vector<long double>(airport_num, DBL_MAX);
@@ -33,7 +38,7 @@ void Dijkstra::reset() {
     candidate = std::priority_queue<psd, vector<psd>, greater<psd>>();
 }
 
-
+//run dijkstras with the start and end defined
 std::vector<int> Dijkstra::run() {
     visited[start] = true;
     distance[start] = 0;
@@ -42,21 +47,8 @@ std::vector<int> Dijkstra::run() {
         candidate.push({distance[i], i});
     }
     candidate.push({0, start});
-    //initialize start 
-
-
-    
     while (!candidate.empty()) {
         std::priority_queue<psd, vector<psd>, greater<psd>> tmp = candidate;
-        //std::cout << "Current queue: ";
-        //while (!tmp.empty()) {
-        //    psd q = tmp.top();
-        //    std::cout << q.second << " ";
-        //    tmp.pop();
-        //}
-        //std::cout << std::endl;
-        // int now = candidate.front();
-        // candidate.pop();
         int now = candidate.top().second;
         if (now == end) break;
         candidate.pop();
@@ -70,7 +62,6 @@ std::vector<int> Dijkstra::run() {
                     parent[p.second] = now;
                     update(p.second, alt);
                 }
-                //cout << now << " : " << p.first << ", " << p.second << endl;
             }
             routes[now].pop();
         }
@@ -81,21 +72,18 @@ std::vector<int> Dijkstra::run() {
     } else {
         std::vector<int> path;
         printf("Total distance: %Lg\n", distance[end]);
-        //printf("start from %zu to %zu, distance %Lg\n", start, end, distance[end]);
-        //printf("Path :  ");
         while (parent[end] != -1) {
             path.push_back((int)end);
-            //cout << end << " <-- ";
             end = parent[end];
         }
         path.push_back(start);
-        //cout << start;
         return path;
     }
     return {-1};
 
 }
 
+//helper function to find and update the distance in the queue
 void Dijkstra::update(int a, long double alt) {
     priority_queue<psd, vector<psd>, greater<psd>> tmp;
     while (!candidate.empty()) {
