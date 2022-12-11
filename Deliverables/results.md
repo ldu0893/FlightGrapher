@@ -2,8 +2,9 @@
 
 Below are some sample output for the large scale operation of each of the three algorithms.
 
-
-
+![sup3](./supplemental3.png "sup3")
+![sup2](./supplemental2.png "sup2")
+![sup1](./supplemental1.png "sup1")
 
 Note that BFS and Dijkstra’s differ for the same start and end, and PageRank top 5 airports are all international airports. This is a quick way to see that the algorithms are likely correct.
 
