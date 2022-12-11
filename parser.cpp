@@ -10,9 +10,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-Parser::Parser() {
-
-}
+//checks if string is number, if not return -1, if so return the number
 int Parser::isNumber(string s)
 {
     for (size_t i = 0; i < s.length(); i++){
@@ -23,12 +21,14 @@ int Parser::isNumber(string s)
   return num;
 }
 
+//num to rad
 long double Parser::toRadians(const long double degree)
 {
     long double deg = (M_PI) / 180;
     return (deg * degree);
 }
  
+//calculate distance given lat and long with haversine formula
 long double Parser::distance(long double lat1, long double long1, long double lat2, long double long2) {
     lat1 = toRadians(lat1);
     long1 = toRadians(long1);
@@ -41,7 +41,7 @@ long double Parser::distance(long double lat1, long double long1, long double la
     return ans * 6371;
 }
 
-
+//a bunch of getters
 std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>> Parser::getRoutes() {
     return routes;
 }
@@ -62,6 +62,7 @@ std::map<int, std::string> Parser::getNames() {
   return airport_names;
 }
 
+//compute distance in two dimensional pythagorean space
 long double Parser::distancePy(long double lat1, long double long1,
                      long double lat2, long double long2)
 {
@@ -73,27 +74,25 @@ long double Parser::distancePy(long double lat1, long double long1,
   return distance;
 }
 
+//parse everything
 void Parser::runParse(std::string airport, std::string route, int distType) {
 
 
     ifstream input_file;
-    input_file.open(airport);
-    int idnot = -1;
+    input_file.open(airport);//first parse airports
+    int idnot = -1;//idnot is used for extra map redudancy checks
     if (input_file.good()) {
         string input;
         char cur;
         vector<string> outputStrings;
         string builtStr = "";
         while(std::getline(input_file, input)){
-            int numNums=0;
             bool isNumber=true;
             for(size_t i = 0; i < input.size(); i++) {
                 cur = input[i];
-
                 if(cur == ','){
                     if(isNumber && builtStr != ""){
-                        numNums++;
-                        outputStrings.push_back(builtStr);
+                        outputStrings.push_back(builtStr);//only push numbers
                     }
                     isNumber=true;
                     builtStr = string();
@@ -117,8 +116,8 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
               }
               id_to_index[id_id] = airport_ids.size();
               airport_ids.push_back(id_id);
-              airports.push_back(pair<double, double>(lat_id, lon_id));
-              routes.push_back(std::priority_queue<psd, vector<psd>, greater<psd>>());
+              airports.push_back(pair<double, double>(lat_id, lon_id));//create the graph
+              routes.push_back(std::priority_queue<psd, vector<psd>, greater<psd>>());//create empty edge vectors
             }
               
       
@@ -140,13 +139,6 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
         bool isQuote = false;
         vector<string> outputStrings;
         string builtStr = "";
-        // while(input_file >> input){
-
-
-
-      // for(int i = 0; i<20; i++){
-      //   input_file >> input;
-
       while(input_file >> input){
         for(size_t i = 0; i < input.size(); i++) {
           cur = input[i];
@@ -167,18 +159,11 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
             }
           } 
         }
-      //testing 
-      // for(size_t i = 0; i < outputStrings.size(); i++){
-      //   cout << outputStrings[i] << endl;
-      // }
-        //testing
-      // cout << "NEXT_LINE" << endl;
       if(!outputStrings.empty() && outputStrings.size() >= 6){
         string depart = outputStrings[3];
         string destination = outputStrings[5];
         
         if(isNumber(depart) != -1 && isNumber(destination) != -1){
-          //std::cout << depart << " " << destination << std::endl;
           int q = isNumber(destination);
           if (id_to_index[q] == 0 && idnot != q) {
             outputStrings.clear();
@@ -195,10 +180,7 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
           }
           int depart_id = id_to_index[isNumber(depart)];
           int destination_id = id_to_index[isNumber(destination)];
-         // mp[depart].push_back({destination, 0});
-            //std::cout << depart_id << " " << destination_id << std::endl;
-            //routes[depart_id].push_back({destination_id, distance(0, 0, 0, 0)});
-            if (distType==1)
+            if (distType==1)//Haversine vs pythagorean distance formula
             routes[depart_id].push(psd(distance(airports[depart_id].first,airports[depart_id].second,airports[destination_id].first,airports[destination_id].second), destination_id));
             else 
             routes[depart_id].push(psd(distancePy(airports[depart_id].first,airports[depart_id].second,airports[destination_id].first,airports[destination_id].second), destination_id));
@@ -210,31 +192,19 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
       builtStr = "";
       isQuote = false;
     } 
-
-      //testing
-    //string ss = "2965";
-    // for(auto p:mp[ss]){
-    //   cout<<p.first << "," << p.second << endl;
-    // }
-    } 
-    else {
+    } else {
         cout << "error filename" << endl;
     }
     input_file.close();
 
 
-    input_file.open(airport);    //open file
+    input_file.open(airport);    //now parsing airport names
     if (input_file.good()) {
         string input;
         char cur;
         bool isQuote = false;
         vector<string> outputStrings;
         string builtStr = "";
-        // while(input_file >> input){
-
-
-
-      
       while(std::getline(input_file, input)){       //input line to string
         
         for(size_t i = 0; i < input.size(); i++){      //process the line
@@ -271,10 +241,6 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
         cout << "error filename" << endl;                //fail to read file
     }
     
-    //cout << airport_name[1] << endl;
-    //cout << airport_name[160] << endl;
-
-  
     input_file.close();                                  //close file
 
 }
