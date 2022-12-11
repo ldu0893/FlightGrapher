@@ -2,11 +2,12 @@
 #include <queue>
 #include <string>
 #include <map>
+#include "globals.h"
 
 class BFS {
     public:
-        BFS();
-        BFS(int start, int end, int size, std::map<int, std::vector<std::pair<int, long double>>>* routes);
+        BFS(int start, int end, int size, std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>>* routes);
+        BFS(int size, std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>>* routes);
         void clear();
         std::vector<int> run();
     private:
@@ -16,5 +17,5 @@ class BFS {
         int size;
         int dist;
         std::vector<int> visited;
-        std::map<int, std::vector<std::pair<int, long double>>>* routes;
+        std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>>* routes;
 };

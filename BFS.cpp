@@ -6,16 +6,21 @@
 
 #include "globals.h"
 
-BFS::BFS() {
 
-}
-
-BFS::BFS(int start, int end, int size, std::map<int, std::vector<std::pair<int, long double>>>* routes) : start(start), end(end), size(size), routes(routes) {
+//instantiate bfs with start, end, size, and routes pointer
+BFS::BFS(int start, int end, int size, std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>>* routes) : start(start), end(end), size(size), routes(routes) {
     visited = std::vector<int>(size);
     queue.push({start});
     visited[start]=1;
 }
 
+
+//instantiate bfs without start and end defined, must do so before running BFS
+BFS::BFS(int size, std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>>* routes) : size(size), routes(routes) {
+    visited = std::vector<int>(size);
+}
+
+//clear BFS
 void BFS::clear() {
     queue = std::queue<std::vector<int>>();
     visited.clear();
@@ -26,21 +31,23 @@ void BFS::clear() {
     routes = NULL;
 }
 
+//run BFS
 std::vector<int> BFS::run() {
     while (!queue.empty()) {
         std::vector<int> curr = queue.front();
-        if (DEBUG) for (int q : curr) std::cout << q << " ";
-        if (DEBUG) std::cout << std::endl;
         int last = curr.back();
         if (last == end) return curr;
         queue.pop();
-        for (std::pair<int, long double> p : (*routes)[last]) {
-            if (visited[p.first]) continue;
-            visited[p.first]=1;
+        std::priority_queue<psd, std::vector<psd>, std::greater<psd>> q = (*routes)[last];
+        while (!q.empty()) {
+            psd p = q.top();
+            q.pop();
+            if (visited[p.second]) continue;
+            visited[p.second]=1;
             std::vector<int> tmp = curr;
-            tmp.push_back(p.first);
+            tmp.push_back(p.second);
             queue.push(tmp);
         }
     }
-    return std::vector<int>();
+    return {-1};
 }
