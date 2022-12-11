@@ -316,18 +316,60 @@ bool smallcases() {
     std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
     cin >> trash;
     if (trash=="q") return 0;
-
-    std::cout << "---------CASE 4---------" << std::endl;
     std::cout << "For pagerank testing, we use a smaller graph with 4 airports." << std::endl;
     std::cout << "Parsing data..." << std::endl;
-    Parser p;
-    p.runParse("airportssmall.dat", "routessmall.dat", 0);
-    routes = p.getRoutes();
-    airports = p.getAirports();
-    airport_ids = p.getAirportIds();
-    indices = p.get_indices();
+    Parser p1;
+    p1.runParse("airportssmall.dat", "routessmall.dat", 0);
+    routes = p1.getRoutes();
+    airports = p1.getAirports();
+    airport_ids = p1.getAirportIds();
+    indices = p1.get_indices();
     std::cout << "Parsing done." << std::endl;
+    std::cout << "---------CASE 4---------" << std::endl;
+    std::cout << "PageRank gives airport 3 the highest rank, and other airports sensible ranks" << std::endl;
+    std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
+    PageRank pagerank(adj);
+    pagerank.matrix(adj.size(), 0.85);
+    vector<double> ranks;
+    vector<double> re = pagerank.rank(ranks, 50);
+    priority_queue<psd> pqueue;
     
+    for (int i=0;i<re.size();i++) {
+      pqueue.push({re[i], i});
+    }
+    int cou=0;
+    while (!pqueue.empty()) {
+      cou++;
+      psd p = pqueue.top();
+      pqueue.pop();
+      std::cout << cou << ". Airport: " << airport_ids[p.second] << ", Rank: " << p.first << std::endl;
+    }
+    std::cout << "As seen, airport 3 has highest rank which is expected. Airport 4 has lowest rank which is also expected." << std::endl;
+    std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
+    cin >> trash;
+    if (trash=="q") return 0;
+ 
+    std::cout << "---------CASE 5---------" << std::endl;
+    std::cout << "Pagerank with damping factor 0 gives all airports equal rank" << std::endl;
+    std::vector<std::vector<double>> adj1 = createAdjMatrix(&routes, &airports);
+    PageRank pagerank1(adj1);
+    pagerank1.matrix(adj1.size(), 0);
+    vector<double> ranks1;
+    vector<double> re1 = pagerank1.rank(ranks, 50);
+    priority_queue<psd> pqueue1;
+    
+    for (int i=0;i<re1.size();i++) {
+      pqueue1.push({re1[i], i});
+    }
+    int cou1=0;
+    while (!pqueue1.empty()) {
+      cou++;
+      psd p = pqueue1.top();
+      pqueue1.pop();
+      std::cout << cou1 << ". Airport: " << airport_ids[p.second] << ", Rank: " << p.first << std::endl;
+    }
+    std::cout << "A damping factor of 0 means noone will ever go between airports. Thus they all have the same rank." << std::endl;
+
   }
   return 0;
 
