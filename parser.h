@@ -15,6 +15,7 @@ class Parser {
         std::vector<std::pair<long double, long double>> getAirports();
         std::vector<int> getAirportIds();
         std::map<int, int> get_indices();
+        std::map<int, std::string> getNames();
     private:
         int isNumber(std::string s);
         long double toRadians(const long double degree);
@@ -24,4 +25,5 @@ class Parser {
         std::vector<std::pair<long double, long double>> airports;
         std::vector<int> airport_ids;
         std::map<int, int> id_to_index;
+        std::map<int, std::string> airport_names;
 };

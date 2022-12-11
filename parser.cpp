@@ -81,16 +81,9 @@ std::map<int, int> Parser::get_indices() {
   return id_to_index;
 }
 
-//void Parser::runParsePruned(std::string airports, std::string routes) {
-//  ifstream input_file;
-//  input_file.open(airports);
-//  if (input_file.good()) {
-//    string input;
-//    while (std::getline(input_file, input, ' ')) {
-//      
-//    }
-//  }
-//}
+std::map<int, std::string> Parser::getNames() {
+  return airport_names;
+}
 
 long double Parser::distancePy(long double lat1, long double long1,
                      long double lat2, long double long2)
@@ -251,6 +244,61 @@ void Parser::runParse(std::string airport, std::string route, int distType) {
         cout << "error filename" << endl;
     }
     input_file.close();
+
+
+    input_file.open(airport);    //open file
+    if (input_file.good()) {
+        string input;
+        char cur;
+        bool isQuote = false;
+        vector<string> outputStrings;
+        string builtStr = "";
+        // while(input_file >> input){
+
+
+
+      
+      while(std::getline(input_file, input)){       //input line to string
+        
+        for(size_t i = 0; i < input.size(); i++){      //process the line
+            cur = input[i];                            //reading one character at a time
+
+            if(cur == ','){                            //if ',' process stored term in builtStr
+              if(builtStr != ""){              
+                outputStrings.push_back(builtStr);     //push the term into a vector of strings
+              }
+                
+              builtStr = string();                      //clear builtStr
+            }
+            else {
+                if(cur!='-' && cur!='.') 
+              builtStr += cur;                          //add current char to the current term
+            }
+        }
+      
+      if(!outputStrings.empty()){
+        string id = outputStrings[0];                    //set airpord id
+
+        int id_id = std::stoi(id);                       //turn string into interger type
+        
+        airport_names[id_id] = outputStrings[1];          //set airport name
+        }
+        
+      
+      outputStrings.clear();                             //clear vector to start new line
+      builtStr = "";                                     //clear current term 
+ 
+      }
+    } 
+    else {
+        cout << "error filename" << endl;                //fail to read file
+    }
+    
+    //cout << airport_name[1] << endl;
+    //cout << airport_name[160] << endl;
+
+  
+    input_file.close();                                  //close file
 
 }
 

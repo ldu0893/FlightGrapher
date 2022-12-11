@@ -17,6 +17,7 @@ std::vector <priority_queue<psd, vector<psd>, greater<psd>>> routes;
 std::vector<std::pair<long double, long double>> airports;
 std::vector<int> airport_ids;
 std::map<int, int> indices;
+std::map<int, std::string> airport_names;
 
 
 
@@ -109,6 +110,7 @@ bool realcases() {
   airports = p.getAirports();
   airport_ids = p.getAirportIds();
   indices = p.get_indices();
+  airport_names = p.getNames();
   std::cout << "Parsing done." << std::endl;
   std::cout << "Input 1 for BFS, 2 for Dijkstra's, and 3 for Pagerank." << std::endl;
   std::string uinput;
@@ -139,8 +141,8 @@ bool realcases() {
     std::cout << "Printing path:" << std::endl;
     if (path[0]==-1) std::cout << "A path could not be found from " << startid << " to " << endid << std::endl;
     else for (int q=0;q<path.size();q++) {
-      if (q==path.size()-1) std::cout << airport_ids[path[q]] << std::endl;
-      else std::cout << airport_ids[path[q]] << "->";
+      if (q==path.size()-1) std::cout << airport_names[airport_ids[path[q]]] << std::endl;
+      else std::cout << airport_names[airport_ids[path[q]]] << "->";
     }
     std::cout << "BFS done. ";
     std::cout << "Restart? (y/n)" << std::endl;
@@ -175,8 +177,8 @@ bool realcases() {
     std::cout << "Printing path:" << std::endl;
     if (pat[0]==-1) std::cout << "A path could not be found from " << startid << " to " << endid << std::endl;
     else for (int q=pat.size()-1;q>=0;q--) {
-      if (q==0) std::cout << airport_ids[pat[q]] << std::endl;
-      else std::cout << airport_ids[pat[q]] << "->";
+      if (q==0) std::cout << airport_names[airport_ids[pat[q]]] << std::endl;
+      else std::cout << airport_names[airport_ids[pat[q]]] << "->";
     }
     std::cout << "Dijkstra's done. Restart? (y/n)" << std::endl;
     std::string res;
@@ -221,7 +223,7 @@ bool realcases() {
     while (!pqueue.empty() && cou < isNumber(qnum)) {
       psd p = pqueue.top();
       pqueue.pop();
-      std::cout << cou+1 << ". Airport: " << airport_ids[p.second] << ", Rank: " << p.first << std::endl;
+      std::cout << cou+1 << ". Airport: " << airport_names[airport_ids[p.second]] << ", Rank: " << p.first << std::endl;
       cou++;
     }
     std::cout << "PageRank done. Restart? (y/n)" << std::endl;
@@ -239,140 +241,136 @@ bool realcases() {
 
 bool smallcases() {
   std::string trash;
-  std::cout << "For small test cases, you have two options:" << std::endl;
-  std::cout << "Input 1 for predefined test cases." << std::endl;
-  std::cout << "Input 2 to allow user to decide what to run." << std::endl;
+  std::cout << "You have chosen to run small test cases." << std::endl;
+  std::cout << "Rather than asking for user input, the program will run predefined inputs that show the algorithms are working." << std::endl;
+  std::cout << "Each case will have a description of what it demonstrates." << std::endl;
+  std::cout << "Input any key when you are ready. Input q if you want to quit." << std::endl;
   cin >> trash;
-  while (trash!="1"&&trash!="2") {
+  if (trash=="q") return 0;
+  std::cout << "Parsing data..." << std::endl;
+  Parser p;
+  p.runParse("airportsmed.dat", "routesmed.dat", 0);
+  routes = p.getRoutes();
+  airports = p.getAirports();
+  airport_ids = p.getAirportIds();
+  indices = p.get_indices();
+  airport_names = p.getNames();
+  std::cout << "Parsing done." << std::endl;
+
+  std::cout << "---------CASE 1---------" << std::endl;
+  std::cout << "BFS returns path from 3 to 6 with least nodes visited" << std::endl;
+  BFS bfs(indices[3], indices[6], routes.size(), &routes);
+  std::vector<int> path = bfs.run();
+  std::cout << "Printing path:" << std::endl;
+  for (int q=0;q<path.size();q++) {
+    if (q==path.size()-1) std::cout << airport_ids[path[q]] << std::endl;
+    else std::cout << airport_ids[path[q]] << "->";
+  }
+  std::cout << "As seen, BFS finds the appropriate path with only 3 nodes visited, which is the least possible." << std::endl;
+  std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
+  cin >> trash;
+  if (trash=="q") return 0;
+
+  std::cout << "---------CASE 2---------" << std::endl;
+  std::cout << "Dijkstra's finds the path from 3 to 6 with the shortest distance traveled" << std::endl;
+  Dijkstra dijkstra(indices[3], indices[6], routes.size(), routes);
+  std::vector<int> pat = dijkstra.run();
+  std::cout << "Printing path:" << std::endl;
+  for (int q=pat.size()-1;q>=0;q--) {
+    if (q==0) std::cout << airport_ids[pat[q]] << std::endl;
+    else std::cout << airport_ids[pat[q]] << "->";
+  }
+  std::cout << "As seen, Dijkstra's finds the least distance, with more airports visited than BFS." << std::endl;
+  std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
+  cin >> trash;
+  if (trash=="q") return 0;
+
+  std::cout << "---------CASE 3---------" << std::endl;
+  std::cout << "BFS/Dijkstra's cannot find a path from 1 to 7" << std::endl;
+  BFS bfs1(indices[1], indices[7], routes.size(), &routes);
+  std::vector<int> path1 = bfs1.run();
+  std::cout << "BFS Printing path:" << std::endl;
+  if (path1[0]==-1) std::cout << "A path could not be found from 1 to 7" << std::endl;
+  else for (int q=0;q<path1.size();q++) {
+    if (q==path1.size()-1) std::cout << airport_ids[path1[q]] << std::endl;
+    else std::cout << airport_ids[path1[q]] << "->";
+  }
+
+  Dijkstra dijkstra1(indices[1], indices[7], routes.size(), routes);
+  std::vector<int> pat1 = dijkstra1.run();
+  std::cout << "Dijkstra's Printing path:" << std::endl;
+  if (pat1[0]==-1) std::cout << "A path could not be found from 1 to 7" << std::endl;
+  else for (int q=pat1.size()-1;q>=0;q--) {
+    if (q==0) std::cout << airport_ids[pat1[q]] << std::endl;
+    else std::cout << airport_ids[pat1[q]] << "->";
+  }
+  std::cout << "As seen, BFS and Dijkstra's cannot find the path as it does not exist." << std::endl;
+  std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
+  cin >> trash;
+  if (trash=="q") return 0;
+  std::cout << "For pagerank testing, we use a smaller graph with 4 airports." << std::endl;
+  std::cout << "Parsing data..." << std::endl;
+  Parser p1;
+  p1.runParse("airportssmall.dat", "routessmall.dat", 0);
+  routes = p1.getRoutes();
+  airports = p1.getAirports();
+  airport_ids = p1.getAirportIds();
+  indices = p1.get_indices();
+  airport_names = p1.getNames();
+  std::cout << "Parsing done." << std::endl;
+  std::cout << "---------CASE 4---------" << std::endl;
+  std::cout << "PageRank gives airport 3 the highest rank, and other airports sensible ranks" << std::endl;
+  std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
+  PageRank pagerank(adj);
+  pagerank.matrix(adj.size(), 0.85);
+  vector<double> ranks;
+  vector<double> re = pagerank.rank(ranks, 50);
+  priority_queue<psd> pqueue;
+    
+  for (int i=0;i<re.size();i++) {
+    pqueue.push({re[i], i});
+  }
+  int cou=0;
+  while (!pqueue.empty()) {
+    cou++;
+    psd p = pqueue.top();
+    pqueue.pop();
+    std::cout << cou << ". Airport: " << airport_ids[p.second] << ", Rank: " << p.first << std::endl;
+  }
+  std::cout << "As seen, airport 3 has highest rank which is expected. Airport 4 has lowest rank which is also expected." << std::endl;
+  std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
+  cin >> trash;
+  if (trash=="q") return 0;
+ 
+  std::cout << "---------CASE 5---------" << std::endl;
+  std::cout << "Pagerank with damping factor 0 gives all airports equal rank" << std::endl;
+  std::vector<std::vector<double>> adj1 = createAdjMatrix(&routes, &airports);
+  PageRank pagerank1(adj1);
+  pagerank1.matrix(adj1.size(), 0);
+  vector<double> ranks1;
+  vector<double> re1 = pagerank1.rank(ranks, 50);
+  priority_queue<psd> pqueue1;
+    
+  for (int i=0;i<re1.size();i++) {
+    pqueue1.push({re1[i], i});
+  }
+  int cou1=0;
+  while (!pqueue1.empty()) {
+    cou1++;
+    psd p = pqueue1.top();
+    pqueue1.pop();
+    std::cout << cou1 << ". Airport: " << airport_ids[p.second] << ", Rank: " << p.first << std::endl;
+  }
+  std::cout << "A damping factor of 0 means noone will ever go between airports. Thus they all have the same rank." << std::endl;
+
+  std::cout << "Test cases done. Restart? (y/n)" << std::endl;
+  cin >> trash;
+  while (trash!="y"&&trash!="n") {
     std::cout << "Try again" << std::endl;
     cin >> trash;
   }
-  if (trash=="2") {
-
-  } else if (trash=="1") {
-    std::cout << "You have chosen to run small test cases." << std::endl;
-    std::cout << "Rather than asking for user input, the program will run predefined inputs that show the algorithms are working." << std::endl;
-    std::cout << "Each case will have a description of what it demonstrates." << std::endl;
-    std::cout << "Input any key when you are ready. Input q if you want to quit." << std::endl;
-    cin >> trash;
-    if (trash=="q") return 0;
-    std::cout << "Parsing data..." << std::endl;
-    Parser p;
-    p.runParse("airports--.dat", "routes--.dat", 0);
-    routes = p.getRoutes();
-    airports = p.getAirports();
-    airport_ids = p.getAirportIds();
-    indices = p.get_indices();
-    std::cout << "Parsing done." << std::endl;
-
-    std::cout << "---------CASE 1---------" << std::endl;
-    std::cout << "BFS returns path from 3 to 6 with least nodes visited" << std::endl;
-    BFS bfs(indices[3], indices[6], routes.size(), &routes);
-    std::vector<int> path = bfs.run();
-    std::cout << "Printing path:" << std::endl;
-    for (int q=0;q<path.size();q++) {
-      if (q==path.size()-1) std::cout << airport_ids[path[q]] << std::endl;
-      else std::cout << airport_ids[path[q]] << "->";
-    }
-    std::cout << "As seen, BFS finds the appropriate path with only 3 nodes visited, which is the least possible." << std::endl;
-    std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
-    cin >> trash;
-    if (trash=="q") return 0;
-
-    std::cout << "---------CASE 2---------" << std::endl;
-    std::cout << "Dijkstra's finds the path from 3 to 6 with the shortest distance traveled" << std::endl;
-    Dijkstra dijkstra(indices[3], indices[6], routes.size(), routes);
-    std::vector<int> pat = dijkstra.run();
-    std::cout << "Printing path:" << std::endl;
-    for (int q=pat.size()-1;q>=0;q--) {
-      if (q==0) std::cout << airport_ids[pat[q]] << std::endl;
-      else std::cout << airport_ids[pat[q]] << "->";
-    }
-    std::cout << "As seen, Dijkstra's finds the least distance, with more airports visited than BFS." << std::endl;
-    std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
-    cin >> trash;
-    if (trash=="q") return 0;
-
-    std::cout << "---------CASE 3---------" << std::endl;
-    std::cout << "BFS/Dijkstra's cannot find a path from 1 to 7" << std::endl;
-    BFS bfs1(indices[1], indices[7], routes.size(), &routes);
-    std::vector<int> path1 = bfs1.run();
-    std::cout << "BFS Printing path:" << std::endl;
-    if (path1[0]==-1) std::cout << "A path could not be found from 1 to 7" << std::endl;
-    else for (int q=0;q<path1.size();q++) {
-      if (q==path1.size()-1) std::cout << airport_ids[path1[q]] << std::endl;
-      else std::cout << airport_ids[path1[q]] << "->";
-    }
-
-    Dijkstra dijkstra1(indices[1], indices[7], routes.size(), routes);
-    std::vector<int> pat1 = dijkstra1.run();
-    std::cout << "Dijkstra's Printing path:" << std::endl;
-    if (pat1[0]==-1) std::cout << "A path could not be found from 1 to 7" << std::endl;
-    else for (int q=pat1.size()-1;q>=0;q--) {
-      if (q==0) std::cout << airport_ids[pat1[q]] << std::endl;
-      else std::cout << airport_ids[pat1[q]] << "->";
-    }
-    std::cout << "As seen, BFS and Dijkstra's cannot find the path as it does not exist." << std::endl;
-    std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
-    cin >> trash;
-    if (trash=="q") return 0;
-    std::cout << "For pagerank testing, we use a smaller graph with 4 airports." << std::endl;
-    std::cout << "Parsing data..." << std::endl;
-    Parser p1;
-    p1.runParse("airportssmall.dat", "routessmall.dat", 0);
-    routes = p1.getRoutes();
-    airports = p1.getAirports();
-    airport_ids = p1.getAirportIds();
-    indices = p1.get_indices();
-    std::cout << "Parsing done." << std::endl;
-    std::cout << "---------CASE 4---------" << std::endl;
-    std::cout << "PageRank gives airport 3 the highest rank, and other airports sensible ranks" << std::endl;
-    std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
-    PageRank pagerank(adj);
-    pagerank.matrix(adj.size(), 0.85);
-    vector<double> ranks;
-    vector<double> re = pagerank.rank(ranks, 50);
-    priority_queue<psd> pqueue;
-    
-    for (int i=0;i<re.size();i++) {
-      pqueue.push({re[i], i});
-    }
-    int cou=0;
-    while (!pqueue.empty()) {
-      cou++;
-      psd p = pqueue.top();
-      pqueue.pop();
-      std::cout << cou << ". Airport: " << airport_ids[p.second] << ", Rank: " << p.first << std::endl;
-    }
-    std::cout << "As seen, airport 3 has highest rank which is expected. Airport 4 has lowest rank which is also expected." << std::endl;
-    std::cout << "Input any key to continue. Input q if you want to quit." << std::endl;
-    cin >> trash;
-    if (trash=="q") return 0;
- 
-    std::cout << "---------CASE 5---------" << std::endl;
-    std::cout << "Pagerank with damping factor 0 gives all airports equal rank" << std::endl;
-    std::vector<std::vector<double>> adj1 = createAdjMatrix(&routes, &airports);
-    PageRank pagerank1(adj1);
-    pagerank1.matrix(adj1.size(), 0);
-    vector<double> ranks1;
-    vector<double> re1 = pagerank1.rank(ranks, 50);
-    priority_queue<psd> pqueue1;
-    
-    for (int i=0;i<re1.size();i++) {
-      pqueue1.push({re1[i], i});
-    }
-    int cou1=0;
-    while (!pqueue1.empty()) {
-      cou++;
-      psd p = pqueue1.top();
-      pqueue1.pop();
-      std::cout << cou1 << ". Airport: " << airport_ids[p.second] << ", Rank: " << p.first << std::endl;
-    }
-    std::cout << "A damping factor of 0 means noone will ever go between airports. Thus they all have the same rank." << std::endl;
-
-  }
+  if (trash=="y") return 1;
   return 0;
-
 }
 
 int main() {

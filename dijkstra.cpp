@@ -60,6 +60,7 @@ std::vector<int> Dijkstra::run() {
         // int now = candidate.front();
         // candidate.pop();
         int now = candidate.top().second;
+        if (now == end) break;
         candidate.pop();
         visited[now] = true;
         while (!(*routes)[now].empty()) {
