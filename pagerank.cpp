@@ -7,10 +7,6 @@
 
 
 PageRank::PageRank(std::vector<std::vector<double>> adj) : adj(adj) {
-    ids = std::vector<int>(adj.size());
-    for (int i=0;i<adj.size();i++) {
-        ids[i] = i;
-    }
     num = adj.size();
 }
 
@@ -27,7 +23,7 @@ void PageRank::matrix(int size, double damping) {
 
             sum += adj[y][x];
         } 
-        //if adjcanet matrix is 1, two vertexs are connected
+        //if adjacent matrix is 1, two vertexs are connected
         //damping factor is usually tested around 0.85
         //damping factor is subtracted by 1 and divided by the number of documents
         if(sum > 0){
@@ -78,7 +74,6 @@ vector<double> PageRank::rank(vector<double> starting, int time) {
             }     
         }
         temp = temp2;
-        //std::cout << "time " << time << " first " << temp[0] << " second " << temp[1] << std::endl;
     }
     //result is stored in the pagerank result
     result = temp;

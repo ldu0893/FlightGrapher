@@ -11,7 +11,6 @@ class PageRank
     vector<double> rank(vector<double> initial, int time);
     vector<double> normalize( vector<double> output);
     vector<vector<double>> adj;
-    vector<int> ids;
     vector<double> result; 
     int num;
 };

@@ -20,7 +20,7 @@ std::map<int, int> indices;
 std::map<int, std::string> airport_names;
 
 
-
+//checks if a string is a number, if so return it, if not return -1
 int isNumber(string s)
 {
     for (size_t i = 0; i < s.length(); i++){
@@ -30,6 +30,7 @@ int isNumber(string s)
     return stoi(s);
 }
 
+//creates the directed adjacency matrix used for pagerank, a 1 in row i col j denotes a flight from airport j to airport i
 std::vector<std::vector<double>> createAdjMatrix(std::vector <priority_queue<psd, vector<psd>, greater<psd>>>* routes, std::vector<std::pair<long double, long double>>* airports) {
   std::vector<std::vector<double>> matrix = std::vector<std::vector<double>>(airports->size(), std::vector<double>(airports->size()));
   for (int i=0;i<routes->size();i++) {
@@ -44,6 +45,7 @@ std::vector<std::vector<double>> createAdjMatrix(std::vector <priority_queue<psd
   return matrix;
 }
 
+//used for interfacing with the user when running using real data.
 bool realcases() {
   std::cout << "---------Real Cases---------" << std::endl;
   std::cout << "Parsing data..." << std::endl;
@@ -54,7 +56,7 @@ bool realcases() {
   airport_ids = p.getAirportIds();
   indices = p.get_indices();
   airport_names = p.getNames();
-  std::cout << "Parsing done." << std::endl;
+  std::cout << "Parsing done." << std::endl;//parsing stuff
   std::cout << "Input 1 for BFS, 2 for Dijkstra's, and 3 for Pagerank." << std::endl;
   std::string uinput;
   cin >> uinput;
@@ -63,7 +65,7 @@ bool realcases() {
     cin >> uinput;
   }
   if (uinput=="1") {
-    std::cout << "---------BFS---------" << std::endl;
+    std::cout << "---------BFS---------" << std::endl;//BFS stuff: get start and end from user, run.
     std::string startid, endid;
     std::cout << "Select start airport id (look in the airports.dat file)" << std::endl;
     std::cout << "Note: selecting an invalid id will default to selecting the first airport" << std::endl;
@@ -98,7 +100,7 @@ bool realcases() {
     if (res == "y") return 1;
     else return 0;
   } else if (uinput=="2") {
-    std::cout << "---------Dijkstra's---------" << std::endl;
+    std::cout << "---------Dijkstra's---------" << std::endl;//Dijkstra's stuff: get start and end from user, run
     std::string startid, endid;
     std::cout << "Select start airport id (look in the airports.dat file)" << std::endl;
     std::cout << "Note: selecting an invalid id will default to selecting the first airport" << std::endl;
@@ -134,7 +136,7 @@ bool realcases() {
     else return 0;
 
   } else if (uinput=="3") {
-    std::cout << "---------PageRank---------" << std::endl;
+    std::cout << "---------PageRank---------" << std::endl;//Pagerank stuff: run pagerank, ask user for top airport number
     std::cout << "Creating adjacency matrix..." << std::endl;
     std::vector<std::vector<double>> adj = createAdjMatrix(&routes, &airports);
     PageRank pagerank(adj);
@@ -182,6 +184,8 @@ bool realcases() {
   return 0;
 }
 
+
+//used for showcasing small test cases.
 bool smallcases() {
   std::string trash;
   std::cout << "You have chosen to run small test cases." << std::endl;
@@ -316,6 +320,8 @@ bool smallcases() {
   return 0;
 }
 
+
+//where it all starts.
 int main() {
   std::string userinput;
   std::cout << "Welcome to our CS 225 Final Project!" << std::endl;
@@ -331,13 +337,13 @@ int main() {
   if (userinput == "1") {
     bool cont = 1;
     while (cont) {
-      cont = smallcases();
+      cont = smallcases();//run small test cases
     }
   }
   else if (userinput == "2") {
     bool cont = 1;
     while (cont) {
-      cont = realcases();
+      cont = realcases();//run with real data
     }
   }
 
