@@ -204,6 +204,8 @@ bool smallcases() {
   std::cout << "You have chosen to run small test cases." << std::endl;
   std::cout << "Rather than asking for user input, the program will run predefined inputs that show the algorithms are working." << std::endl;
   std::cout << "Each case will have a description of what it demonstrates." << std::endl;
+  std::cout << std::endl << "!IMPORTANT!: It is strongly recommended you reference the provided pngs in the data folder when corroborating test cases." << std::endl;
+  std::cout << "Medium Graph.png is used for test cases 1-3. Small Graph.png is used for test cases 4-5." << std::endl << std::endl;
   std::cout << "Input any key when you are ready. Input q if you want to quit." << std::endl;
   cin >> trash;
   if (trash=="q") return 0;
