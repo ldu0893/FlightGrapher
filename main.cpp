@@ -18,6 +18,7 @@ std::vector<std::pair<long double, long double>> airports;
 std::vector<int> airport_ids;
 std::map<int, int> indices;
 std::map<int, std::string> airport_names;
+ofstream outputBFS, outputD, outputP;
 
 
 //checks if a string is a number, if so return it, if not return -1
@@ -86,8 +87,13 @@ bool realcases() {
     std::cout << "Printing path:" << std::endl;
     if (path[0]==-1) std::cout << "A path could not be found from " << startid << " to " << endid << std::endl;
     else for (int q=0;q<path.size();q++) {
-      if (q==path.size()-1) std::cout << airport_names[airport_ids[path[q]]] << std::endl;
-      else std::cout << airport_names[airport_ids[path[q]]] << "->";
+      if (q==path.size()-1) {
+        std::cout << airport_names[airport_ids[path[q]]] << std::endl;
+        outputBFS << airport_names[airport_ids[path[q]]] << std::endl;
+      } else {
+        std::cout << airport_names[airport_ids[path[q]]] << "->";
+        outputBFS << airport_names[airport_ids[path[q]]] << "->";
+      }
     }
     std::cout << "BFS done. ";
     std::cout << "Restart? (y/n)" << std::endl;
@@ -122,8 +128,14 @@ bool realcases() {
     std::cout << "Printing path:" << std::endl;
     if (pat[0]==-1) std::cout << "A path could not be found from " << startid << " to " << endid << std::endl;
     else for (int q=pat.size()-1;q>=0;q--) {
-      if (q==0) std::cout << airport_names[airport_ids[pat[q]]] << std::endl;
-      else std::cout << airport_names[airport_ids[pat[q]]] << "->";
+      if (q==0) {
+        std::cout << airport_names[airport_ids[pat[q]]] << std::endl;
+        outputD << airport_names[airport_ids[pat[q]]] << std::endl;
+      }
+      else {
+        std::cout << airport_names[airport_ids[pat[q]]] << "->";
+        outputD << airport_names[airport_ids[pat[q]]] << "->";
+      }
     }
     std::cout << "Dijkstra's done. Restart? (y/n)" << std::endl;
     std::string res;
@@ -168,6 +180,7 @@ bool realcases() {
     while (!pqueue.empty() && cou < isNumber(qnum)) {
       psd p = pqueue.top();
       pqueue.pop();
+      outputP << cou+1 << ". Airport: " << airport_names[airport_ids[p.second]] << ", Rank: " << p.first << std::endl;
       std::cout << cou+1 << ". Airport: " << airport_names[airport_ids[p.second]] << ", Rank: " << p.first << std::endl;
       cou++;
     }
@@ -323,6 +336,9 @@ bool smallcases() {
 
 //where it all starts.
 int main() {
+  outputBFS.open("outBFS.txt");
+  outputD.open("outDijkstras.txt");
+  outputP.open("outPageRank.txt");
   std::string userinput;
   std::cout << "Welcome to our CS 225 Final Project!" << std::endl;
   std::cout << "Input 1 for small test cases, input 2 for data from OpenFlights" << std::endl;
@@ -348,5 +364,7 @@ int main() {
   }
 
   std::cout << "Thanks for using our app. Goodbye" << std::endl;
-  
+  outputBFS.close();
+  outputD.close();
+  outputP.close();
 }

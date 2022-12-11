@@ -9,7 +9,6 @@
 
 class Parser {
     public:
-        Parser();
         void runParse(std::string airport, std::string route, int distType);
         std::vector<std::priority_queue<psd, std::vector<psd>, std::greater<psd>>> getRoutes();
         std::vector<std::pair<long double, long double>> getAirports();
